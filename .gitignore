@@ -1,0 +1,79 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Package distributions and builds
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing and Tool Caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Local Databases & MLflow Tracking
+mlflow.db
+mlruns/
+*.sqlite
+*.sqlite3
+*.db
+
+# Data files (raw, intermediate, generated datasets at project root)
+/data/
+*.parquet
+
+# Model artifacts, checkpoints & logs (at project root)
+/artifacts/
+*.joblib
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.onnx
+*.log
