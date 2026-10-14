@@ -60,6 +60,32 @@ class MLflowConfig(BaseModel):
     artifact_location: Path = Field(default=Path("artifacts/mlflow"))
 
 
+class DecisionConfig(BaseModel):
+    """Configurable thresholds for fraud decision engine."""
+
+    model_config = ConfigDict(frozen=True)
+
+    # Decisions: ALLOW if prob < review_threshold, REVIEW if review_threshold <= prob < block_threshold, BLOCK if prob >= block_threshold
+    review_threshold: float = Field(
+        default=0.03, description="Risk probability above which transactions are sent to REVIEW"
+    )
+    block_threshold: float = Field(
+        default=0.20,
+        description="Risk probability above which transactions are BLOCKED immediately",
+    )
+
+
+class APIConfig(BaseModel):
+    """FastAPI service configuration."""
+
+    model_config = ConfigDict(frozen=True)
+
+    host: str = Field(default="0.0.0.0")
+    port: int = Field(default=8000)
+    model_path: Path = Field(default=Path("artifacts/models/best_fraud_model.joblib"))
+    model_version: str = Field(default="fraud-model-v1")
+
+
 class Settings(BaseSettings):
     """Global FraudShield system configuration."""
 
@@ -76,6 +102,8 @@ class Settings(BaseSettings):
     split: SplitConfig = Field(default_factory=SplitConfig)
     model: ModelParams = Field(default_factory=ModelParams)
     mlflow: MLflowConfig = Field(default_factory=MLflowConfig)
+    decision: DecisionConfig = Field(default_factory=DecisionConfig)
+    api: APIConfig = Field(default_factory=APIConfig)
 
 
 # Global settings singleton

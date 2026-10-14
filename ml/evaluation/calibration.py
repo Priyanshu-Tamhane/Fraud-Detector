@@ -13,7 +13,7 @@ class ModelCalibrator:
     """Calibrates classifier probabilities using Platt scaling or Isotonic regression."""
 
     def __init__(self, method: Literal["sigmoid", "isotonic"] = "sigmoid") -> None:
-        
+
         self.method = method
         self.base_estimator: Any = None
         self.calibrator: LogisticRegression | IsotonicRegression | None = None

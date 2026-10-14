@@ -55,7 +55,9 @@ class FeaturePipeline:
         # 1. Base Transaction Features
         features_df = pd.DataFrame(index=working_df.index)
         features_df["amount"] = working_df["amount"].astype(float)
-        features_df["log_amount"] = np.log1p(features_df["amount"]) # transactions can be way too large so this prevents the model from being biased
+        features_df["log_amount"] = np.log1p(
+            features_df["amount"]
+        )  # transactions can be way too large so this prevents the model from being biased
 
         # Temporal cyclics
         dt = working_df["timestamp"].dt

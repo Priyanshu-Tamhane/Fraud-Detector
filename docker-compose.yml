@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fraudshield-api
+    ports:
+      - "8000:8000"
+    environment:
+      - FRAUDSHIELD_ENVIRONMENT=development
+      - FRAUDSHIELD_LOG_LEVEL=INFO
+      - FRAUDSHIELD_API__HOST=0.0.0.0
+      - FRAUDSHIELD_API__PORT=8000
+      - FRAUDSHIELD_API__MODEL_PATH=artifacts/models/best_fraud_model.joblib
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+    restart: unless-stopped
