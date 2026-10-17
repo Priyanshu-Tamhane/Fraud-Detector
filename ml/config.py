@@ -86,6 +86,30 @@ class APIConfig(BaseModel):
     model_version: str = Field(default="fraud-model-v1")
 
 
+class KafkaConfig(BaseModel):
+    """Kafka / Redpanda stream configuration."""
+
+    model_config = ConfigDict(frozen=True)
+
+    bootstrap_servers: str = Field(default="localhost:9092")
+    topic_raw: str = Field(default="transactions.raw")
+    topic_scored: str = Field(default="transactions.scored")
+    topic_dlq: str = Field(default="transactions.dlq")
+    consumer_group: str = Field(default="fraudshield-scorer-group")
+    auto_offset_reset: str = Field(default="earliest")
+
+
+class DatabaseConfig(BaseModel):
+    """PostgreSQL and local storage configuration."""
+
+    model_config = ConfigDict(frozen=True)
+
+    postgres_url: str = Field(
+        default="postgresql://fraudshield:fraudshield@localhost:5432/fraudshield_db"
+    )
+    sqlite_fallback_path: Path = Field(default=Path("artifacts/scored_transactions.db"))
+
+
 class Settings(BaseSettings):
     """Global FraudShield system configuration."""
 
@@ -104,6 +128,8 @@ class Settings(BaseSettings):
     mlflow: MLflowConfig = Field(default_factory=MLflowConfig)
     decision: DecisionConfig = Field(default_factory=DecisionConfig)
     api: APIConfig = Field(default_factory=APIConfig)
+    kafka: KafkaConfig = Field(default_factory=KafkaConfig)
+    database: DatabaseConfig = Field(default_factory=DatabaseConfig)
 
 
 # Global settings singleton

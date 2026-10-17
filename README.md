@@ -60,9 +60,15 @@ Incoming Transaction
 ### Phase 2: Low-Latency Inference API & Docker
 * **FastAPI Application:** Modern `@asynccontextmanager` `lifespan` handler preloading model artifacts into memory on startup.
 * **Thread-Safe Model Loader:** Caches calibrated LightGBM booster and metadata in RAM.
-* **Decision Engine:** Evaluates fraud probabilities against configurable operational thresholds (`ALLOW`, `REVIEW`, `BLOCK`).
+* **Decision Engine:** Evaluates fraud probabilities against configurable operational thresholds (`ALLOW`, `REVIEW`, `BLOCK` via `StrEnum`).
 * **Explainability Module:** Surfaces contextual `top_risk_factors` (e.g., `new_device`, `high_amount_deviation`, `unusual_transaction_time`).
 * **Containerization:** Multi-stage `Dockerfile` (using `uv` for sub-second image builds) and local `docker-compose.yml`.
+
+### Phase 3: Real-Time Streaming Ingestion & Asynchronous Pipeline
+* **Redpanda / Kafka Architecture:** Event-driven streaming cluster via Docker Compose running `transactions.raw`, `transactions.scored`, and `transactions.dlq`.
+* **Keyed Partitioning:** Partitioning by `user_id` ensures chronological event order per account and eliminates race conditions.
+* **Stream Processor:** High-throughput async consumer validating incoming transactions, computing online features, evaluating risk scores with LightGBM, and routing corrupted payloads to the Dead Letter Queue (DLQ).
+* **Audit Persistence:** Asynchronous PostgreSQL audit table (`scored_transactions`) with seamless SQLite local fallback for isolated offline testing.
 
 ---
 
