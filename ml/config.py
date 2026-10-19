@@ -110,6 +110,20 @@ class DatabaseConfig(BaseModel):
     sqlite_fallback_path: Path = Field(default=Path("artifacts/scored_transactions.db"))
 
 
+class RedisConfig(BaseModel):
+    """Redis online feature store configuration."""
+
+    model_config = ConfigDict(frozen=True)
+
+    redis_url: str = Field(default="redis://localhost:6379/0")
+    ttl_user_window_seconds: int = Field(
+        default=86400, description="24h TTL for sliding transaction history"
+    )
+    ttl_device_set_seconds: int = Field(
+        default=2592000, description="30d TTL for device associations"
+    )
+
+
 class Settings(BaseSettings):
     """Global FraudShield system configuration."""
 
@@ -130,6 +144,7 @@ class Settings(BaseSettings):
     api: APIConfig = Field(default_factory=APIConfig)
     kafka: KafkaConfig = Field(default_factory=KafkaConfig)
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
+    redis: RedisConfig = Field(default_factory=RedisConfig)
 
 
 # Global settings singleton

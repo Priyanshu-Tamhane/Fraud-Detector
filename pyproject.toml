@@ -20,6 +20,7 @@ dependencies = [
     "rich>=13.7.0",
     "aiokafka>=0.10.0",
     "asyncpg>=0.29.0",
+    "redis>=5.0.0",
 ]
 
 [project.optional-dependencies]

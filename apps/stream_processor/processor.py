@@ -22,10 +22,13 @@ class FraudStreamProcessor:
     def __init__(
         self,
         bootstrap_servers: str | None = None,
-        topic_raw: str | None = None,  #The inbound Kafka topic (transactions.raw) where payment switches publish unverified transactions.
-        topic_scored: str | None = None,  #The outbound Kafka topic (transactions.scored) where downstream services (e.g., notification systems, blocklists) receive our predictions.
+        topic_raw: str
+        | None = None,  # The inbound Kafka topic (transactions.raw) where payment switches publish unverified transactions.
+        topic_scored: str
+        | None = None,  # The outbound Kafka topic (transactions.scored) where downstream services (e.g., notification systems, blocklists) receive our predictions.
         topic_dlq: str | None = None,
-        consumer_group: str | None = None, #Kafka consumer group (fraudshield-scorer-group). Allows multiple worker replicas to share the load without duplicating work.
+        consumer_group: str
+        | None = None,  # Kafka consumer group (fraudshield-scorer-group). Allows multiple worker replicas to share the load without duplicating work.
         pred: TransactionPredictor | None = None,
         db_storage: TransactionStorage | None = None,
         loader: ModelLoader | None = None,

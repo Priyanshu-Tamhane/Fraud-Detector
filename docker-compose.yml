@@ -30,6 +30,16 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    container_name: fraudshield-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+
   api:
     build:
       context: .
@@ -45,11 +55,13 @@ services:
       - FRAUDSHIELD_API__MODEL_PATH=artifacts/models/best_fraud_model.joblib
       - FRAUDSHIELD_KAFKA__BOOTSTRAP_SERVERS=redpanda:29092
       - FRAUDSHIELD_DATABASE__POSTGRES_URL=postgresql://fraudshield:fraudshield@postgres:5432/fraudshield_db
+      - FRAUDSHIELD_REDIS__REDIS_URL=redis://redis:6379/0
     volumes:
       - ./artifacts:/app/artifacts:ro
     depends_on:
       - redpanda
       - postgres
+      - redis
     restart: unless-stopped
 
   stream-processor:
@@ -63,13 +75,16 @@ services:
       - FRAUDSHIELD_LOG_LEVEL=INFO
       - FRAUDSHIELD_KAFKA__BOOTSTRAP_SERVERS=redpanda:29092
       - FRAUDSHIELD_DATABASE__POSTGRES_URL=postgresql://fraudshield:fraudshield@postgres:5432/fraudshield_db
+      - FRAUDSHIELD_REDIS__REDIS_URL=redis://redis:6379/0
       - FRAUDSHIELD_API__MODEL_PATH=artifacts/models/best_fraud_model.joblib
     volumes:
       - ./artifacts:/app/artifacts:ro
     depends_on:
       - redpanda
       - postgres
+      - redis
     restart: unless-stopped
 
 volumes:
   postgres_data:
+  redis_data:
