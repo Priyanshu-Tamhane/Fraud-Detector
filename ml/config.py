@@ -124,6 +124,30 @@ class RedisConfig(BaseModel):
     )
 
 
+class FeastConfig(BaseModel):
+    """Feast declarative feature store configuration."""
+
+    model_config = ConfigDict(frozen=True)
+
+    repo_path: Path = Field(default=Path("feature_store"))
+    registry_path: Path = Field(default=Path("data/feast_registry.db"))
+    user_features_parquet: Path = Field(
+        default=Path("data/features/user_features.parquet"),
+        description="Offline batch Parquet source for user features",
+    )
+    device_features_parquet: Path = Field(
+        default=Path("data/features/device_features.parquet"),
+        description="Offline batch Parquet source for device features",
+    )
+    online_store_type: str = Field(
+        default="sqlite", description="Online store provider: 'sqlite' or 'redis'"
+    )
+    online_store_path: Path = Field(
+        default=Path("data/online_store.db"),
+        description="Path for SQLite online store (used in local mode and testing)",
+    )
+
+
 class Settings(BaseSettings):
     """Global FraudShield system configuration."""
 
@@ -145,6 +169,7 @@ class Settings(BaseSettings):
     kafka: KafkaConfig = Field(default_factory=KafkaConfig)
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     redis: RedisConfig = Field(default_factory=RedisConfig)
+    feast: FeastConfig = Field(default_factory=FeastConfig)
 
 
 # Global settings singleton

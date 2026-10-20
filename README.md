@@ -76,6 +76,12 @@ Incoming Transaction
 * **Low-Latency Predictor Integration:** Updated `TransactionPredictor` to retrieve dynamic online features alongside static payload attributes, generating real-time risk scores and explainability factors in sub-20ms.
 * **Mathematical Parity Verification (`test_feature_parity.py`):** Rigorous automated test suite verifying 0.00% train-serve feature skew between offline batch feature engineering and online sliding-window Redis calculations.
 
+### Phase 5: Declarative Feature Store (Feast)
+* **Declarative Feature Repository (`feature_store/`):** Unified definitions for `user_id` and `device_id` entities, `user_behavior_fv` and `device_reputation_fv` feature views with strict schemas and TTLs.
+* **Point-in-Time Correct Offline Joins:** Uses Feast's as-of join engine on historical transaction data to extract training feature matrices without time-travel lookahead leakage.
+* **Batch to Online Materialization (`feature_store.materialize`):** One-command synchronization pipeline reading batch Parquet feature tables into the online store (Redis / SQLite) for sub-5ms inference lookup.
+* **Unified Client (`FeatureStoreClient`):** High-level client encapsulating offline historical feature retrieval, online single-point lookups, and schema registration.
+* **Mathematical Parity Suite (`test_feast_integration.py`):** Automated tests verifying point-in-time correctness, schema conformance, and 100% equivalence between offline joins and online retrieval.
 
 ---
 
